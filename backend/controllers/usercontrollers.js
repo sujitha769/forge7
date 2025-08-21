@@ -34,7 +34,10 @@ const createuser=async (req,res)=>{
   })
   await userdetailsfrommodel.save();
 
-  res.status(200).json(userdetailsfrommodel)
+  // Exclude sensitive fields like password from response
+  const sanitized = userdetailsfrommodel.toObject();
+  delete sanitized.password;
+  res.status(200).json(sanitized)
   console.log("registered") 
   }
 catch(error){

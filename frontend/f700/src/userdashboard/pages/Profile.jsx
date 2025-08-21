@@ -59,6 +59,10 @@ const Profile = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
+                    <label className="form-label fw-bold">User ID:</label>
+                    <p className="text-muted mb-0">{user?.userId || '-'}</p>
+                  </div>
+                  <div className="mb-3">
                     <label className="form-label fw-bold">Emergency Contact:</label>
                     <p className="text-muted mb-0">{user?.emergencyContact || '-'}</p>
                   </div>
