@@ -129,6 +129,9 @@ export default function Login({ onLoginSuccess }) {
       if (res.ok && data.token) {
         alert("Login successful!");
         localStorage.setItem("logintoken", data.token);
+        if (data.username) {
+          localStorage.setItem("username", data.username);
+        }
 
         setFormData({ email: "", password: "" });
 

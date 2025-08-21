@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Profile = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const username = localStorage.getItem('username');
+    if (!username) {
+      setError('Not logged in');
+      setLoading(false);
+      return;
+    }
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch(`http://localhost:5700/user/profile/${username}`);
+        if (!res.ok) throw new Error('Failed to fetch profile');
+        const data = await res.json();
+        setUser(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
   return (
     <div className="container-fluid p-4" style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+      {loading && <p>Loading profile...</p>}
+      {error && <div className="alert alert-danger">{error}</div>}
       <div className="row">
         {/* Profile Information Section */}
         <div className="col-12 mb-4">
@@ -18,29 +46,29 @@ const Profile = () => {
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label fw-bold">Name:</label>
-                    <p className="text-muted mb-0">Jane Doe</p>
+                    <p className="text-muted mb-0">{user?.name || '-'}</p>
                   </div>
                   <div className="mb-3">
                     <label className="form-label fw-bold">Phone:</label>
-                    <p className="text-muted mb-0">-</p>
+                    <p className="text-muted mb-0">{user?.phone || '-'}</p>
                   </div>
                   <div className="mb-3">
                     <label className="form-label fw-bold">Address:</label>
-                    <p className="text-muted mb-0">-</p>
+                    <p className="text-muted mb-0">{user?.address || '-'}</p>
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label fw-bold">Emergency Contact:</label>
-                    <p className="text-muted mb-0">-</p>
+                    <p className="text-muted mb-0">{user?.emergencyContact || '-'}</p>
                   </div>
                   <div className="mb-3">
                     <label className="form-label fw-bold">Email:</label>
-                    <p className="text-muted mb-0">alapatipranavi@gmail.com</p>
+                    <p className="text-muted mb-0">{user?.email || '-'}</p>
                   </div>
                   <div className="mb-3">
                     <label className="form-label fw-bold">Date of Birth:</label>
-                    <p className="text-muted mb-0">-</p>
+                    <p className="text-muted mb-0">{user?.dateOfBirth || '-'}</p>
                   </div>
                 </div>
               </div>

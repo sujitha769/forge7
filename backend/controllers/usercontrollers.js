@@ -10,7 +10,7 @@ const secretkey=process.env.WHATISNAME
 
 const createuser=async (req,res)=>{
   try{
-  const {name, username, email, password}=req.body;
+  const {name, username, email, password, phone, address, emergencyContact, dateOfBirth}=req.body;
 
 
   const existingUser = await usermodel.findOne({ $or: [{ email }, { username }] });
@@ -25,7 +25,11 @@ const createuser=async (req,res)=>{
     name,
     username,
     email,
-    password:hashedpassword
+    password:hashedpassword,
+    phone: phone || null,
+    address: address || null,
+    emergencyContact: emergencyContact || null,
+    dateOfBirth: dateOfBirth || null
   })
   await userdetailsfrommodel.save();
 

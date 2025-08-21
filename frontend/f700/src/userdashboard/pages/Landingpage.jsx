@@ -89,6 +89,9 @@ import Sidebar from "../components/Sidebar";
 import Register from "../../Register";
 import Login from "../../Login";
 import Profile from "./Profile";
+import RegisterChoice from "./RegisterChoice";
+import DoctorRegister from "./DoctorRegister";
+import MyBookings from "./MyBookings";
 
 const Landingpage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -133,7 +136,9 @@ const Landingpage = () => {
             }
           />
 
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<RegisterChoice />} />
+          <Route path="/register-client" element={<Register />} />
+          <Route path="/register-doctor" element={<DoctorRegister />} />
           <Route
             path="/login"
             element={<Login onLoginSuccess={handleLoginSuccess} />}
@@ -143,6 +148,7 @@ const Landingpage = () => {
           {isAuthenticated && (
             <>
               <Route path="/profile" element={<Profile />} />
+              <Route path="/my-bookings" element={<MyBookings />} />
             </>
           )}
         </Routes>

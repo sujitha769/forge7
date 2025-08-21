@@ -5,5 +5,6 @@ const verifytoken = require('../middlewares/verifytoken')
 
 router.post('/adduser',usercontroller.createuser)
 router.post('/loginuser',usercontroller.userLogin)
+router.get('/profile/:username', usercontroller.getProfileByUsername)
 
 module.exports=router;

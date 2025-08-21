@@ -6,7 +6,11 @@ export default function Register() {
     name: "",
     username: "",
     email: "",
-    password: ""
+    password: "",
+    phone: "",
+    address: "",
+    emergencyContact: "",
+    dateOfBirth: ""
   });
 
   const navigate = useNavigate();
@@ -30,7 +34,7 @@ export default function Register() {
 
       if (res.ok) {
         alert("User registered successfully!");
-        setFormData({ name: "", username: "", email: "", password: "" });
+        setFormData({ name: "", username: "", email: "", password: "", phone: "", address: "", emergencyContact: "", dateOfBirth: "" });
         navigate("/login");
       } else {
         alert(data.message || "Something went wrong");
@@ -72,6 +76,57 @@ export default function Register() {
               placeholder="Enter your Username"
               onChange={handleChange}
               required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="phone" className="form-label">Phone</label>
+            <input
+              type="text"
+              className="form-control"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              placeholder="Enter your Phone"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="address" className="form-label">Address</label>
+            <input
+              type="text"
+              className="form-control"
+              id="address"
+              name="address"
+              value={formData.address}
+              placeholder="Enter your Address"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="emergencyContact" className="form-label">Emergency Contact</label>
+            <input
+              type="text"
+              className="form-control"
+              id="emergencyContact"
+              name="emergencyContact"
+              value={formData.emergencyContact}
+              placeholder="Name and phone"
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="dateOfBirth" className="form-label">Date of Birth</label>
+            <input
+              type="date"
+              className="form-control"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
             />
           </div>
 
