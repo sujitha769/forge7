@@ -82,16 +82,24 @@
 
 
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import DoctorSidebar from "../components/DoctorSidebar";
 import Register from "../../Register";
 import Login from "../../Login";
 import Profile from "./Profile";
 import RegisterChoice from "./RegisterChoice";
 import DoctorRegister from "./DoctorRegister";
 import MyBookings from "./MyBookings";
+import DoctorOverview from "./DoctorOverview";
+import DoctorAppointments from "./DoctorAppointments";
+import DoctorPatients from "./DoctorPatients";
+import DoctorPrescriptions from "./DoctorPrescriptions";
+import DoctorSettings from "./DoctorSettings";
+import ChooseRole from "./ChooseRole";
+import RequireRole from "../components/RequireRole";
 
 const Landingpage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -118,7 +126,9 @@ const Landingpage = () => {
   return (
     <>
       <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-      {isAuthenticated && <Sidebar />}
+      {isAuthenticated && window.location.pathname !== '/choose-role' && (
+        localStorage.getItem('role') === 'doctor' ? <DoctorSidebar /> : <Sidebar />
+      )}
 
       <div
         className="container mt-4"
@@ -129,7 +139,11 @@ const Landingpage = () => {
             path="/"
             element={
               isAuthenticated ? (
-                <h2>Welcome to Dashboard</h2>
+                localStorage.getItem('role') === 'doctor' ? (
+                  <Navigate to="/doctor/overview" replace />
+                ) : (
+                  <Navigate to="/profile" replace />
+                )
               ) : (
                 <Login onLoginSuccess={handleLoginSuccess} />
               )
@@ -139,6 +153,7 @@ const Landingpage = () => {
           <Route path="/register" element={<RegisterChoice />} />
           <Route path="/register-client" element={<Register />} />
           <Route path="/register-doctor" element={<DoctorRegister />} />
+          <Route path="/choose-role" element={<ChooseRole />} />
           <Route
             path="/login"
             element={<Login onLoginSuccess={handleLoginSuccess} />}
@@ -147,8 +162,20 @@ const Landingpage = () => {
           {/* Protected Routes */}
           {isAuthenticated && (
             <>
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/my-bookings" element={<MyBookings />} />
+              {localStorage.getItem('role') === 'doctor' ? (
+                <>
+                  <Route path="/doctor/overview" element={<RequireRole role="doctor"><DoctorOverview /></RequireRole>} />
+                  <Route path="/doctor/appointments" element={<RequireRole role="doctor"><DoctorAppointments /></RequireRole>} />
+                  <Route path="/doctor/patients" element={<RequireRole role="doctor"><DoctorPatients /></RequireRole>} />
+                  <Route path="/doctor/prescriptions" element={<RequireRole role="doctor"><DoctorPrescriptions /></RequireRole>} />
+                  <Route path="/doctor/settings" element={<RequireRole role="doctor"><DoctorSettings /></RequireRole>} />
+                </>
+              ) : (
+                <>
+                  <Route path="/profile" element={<RequireRole role="client"><Profile /></RequireRole>} />
+                  <Route path="/my-bookings" element={<RequireRole role="client"><MyBookings /></RequireRole>} />
+                </>
+              )}
             </>
           )}
         </Routes>

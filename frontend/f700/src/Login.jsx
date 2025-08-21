@@ -132,12 +132,15 @@ export default function Login({ onLoginSuccess }) {
         if (data.username) {
           localStorage.setItem("username", data.username);
         }
+        if (data.role) {
+          localStorage.setItem("role", data.role);
+        }
 
         setFormData({ email: "", password: "" });
 
         if (onLoginSuccess) onLoginSuccess();
-
-        navigate("/");
+        // After login, ask which portal to continue with, but enforce registered role on that page
+        navigate('/choose-role');
       } else {
         alert(data.error || "Something went wrong");
       }

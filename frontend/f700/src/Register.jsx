@@ -10,7 +10,8 @@ export default function Register() {
     phone: "",
     address: "",
     emergencyContact: "",
-    dateOfBirth: ""
+    dateOfBirth: "",
+    role: "client"
   });
 
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function Register() {
 
       if (res.ok) {
         alert("User registered successfully!");
-        setFormData({ name: "", username: "", email: "", password: "", phone: "", address: "", emergencyContact: "", dateOfBirth: "" });
+        setFormData({ name: "", username: "", email: "", password: "", phone: "", address: "", emergencyContact: "", dateOfBirth: "", role: "client" });
         navigate("/login");
       } else {
         alert(data.message || "Something went wrong");

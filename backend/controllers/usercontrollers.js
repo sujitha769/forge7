@@ -10,7 +10,7 @@ const secretkey=process.env.WHATISNAME
 
 const createuser=async (req,res)=>{
   try{
-  const {name, username, email, password, phone, address, emergencyContact, dateOfBirth}=req.body;
+  const {name, username, email, password, phone, address, emergencyContact, dateOfBirth, role}=req.body;
 
 
   const existingUser = await usermodel.findOne({ $or: [{ email }, { username }] });
@@ -29,7 +29,8 @@ const createuser=async (req,res)=>{
     phone: phone || null,
     address: address || null,
     emergencyContact: emergencyContact || null,
-    dateOfBirth: dateOfBirth || null
+    dateOfBirth: dateOfBirth || null,
+    role: role || 'client'
   })
   await userdetailsfrommodel.save();
 
@@ -54,7 +55,7 @@ const userLogin=async(req,res)=>{
       return res.status(404).json({error:"invalid user name or password"})
     }
     const token=jwt.sign({userid:userthere._id},secretkey,{expiresIn:"1h"})
-    res.status(200).json({success:"login successfull",token, username: userthere.username})// idhi frontend ki pampisthundhi or postman loo result lo chudachu
+    res.status(200).json({success:"login successfull",token, username: userthere.username, role: userthere.role})
     console.log(email)
     console.log(token)
   } catch (error) {
