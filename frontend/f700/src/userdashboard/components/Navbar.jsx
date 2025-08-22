@@ -32,12 +32,13 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import "./Navbar.css";
 
 const Navbar = ({ isAuthenticated, onLogout }) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3 fixed-top">
-      <Link className="navbar-brand" to="/">
-        MyApp
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 fixed-top">
+      <Link className="navbar-brand d-flex align-items-center" to="/">
+        <img src="/carecloud-logo.svg" alt="CareCloud Logo" height="55" />
       </Link>
 
       <div className="ms-auto">

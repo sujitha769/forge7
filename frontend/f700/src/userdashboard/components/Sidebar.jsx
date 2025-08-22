@@ -31,7 +31,7 @@ const Sidebar = () => {
   return (
     <div
       className="d-flex flex-column bg-light border-start vh-100 p-3"
-      style={{ width: "250px", position: "fixed", top: "56px", right: 0 }}
+      style={{ width: "250px", position: "fixed", top: "80px", right: 0, zIndex: 1 }}
     >
       <h5 className="mb-4">Dashboard</h5>
 

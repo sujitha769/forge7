@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <!-- Outer circle with navy blue border -->
+  <circle cx="500" cy="500" r="480" fill="white" stroke="#1a3a5f" stroke-width="40"/>
+  
+  <!-- Cloud icon at the top -->
+  <path d="M500 200 Q 400 200 400 300 Q 350 300 350 350 Q 300 350 300 400 Q 300 450 350 450 L 650 450 Q 700 450 700 400 Q 700 350 650 350 Q 650 300 600 300 Q 600 200 500 200 Z" fill="white" stroke="#1a3a5f" stroke-width="15"/>
+  
+  <!-- CareCloud text -->
+  <text x="500" y="600" font-family="Arial, sans-serif" font-size="100" font-weight="bold" text-anchor="middle" fill="#1a3a5f">CareCloud</text>
+  
+  <!-- Medical book icon -->
+  <g transform="translate(300, 700) scale(0.8)">
+    <rect x="0" y="0" width="100" height="120" fill="white" stroke="#1a3a5f" stroke-width="8"/>
+    <rect x="50" y="0" width="100" height="120" fill="white" stroke="#1a3a5f" stroke-width="8"/>
+    <line x1="50" y1="30" x2="150" y2="30" stroke="#1a3a5f" stroke-width="8"/>
+    <line x1="50" y1="60" x2="150" y2="60" stroke="#1a3a5f" stroke-width="8"/>
+    <line x1="50" y1="90" x2="150" y2="90" stroke="#1a3a5f" stroke-width="8"/>
+    <text x="25" y="60" font-family="Arial, sans-serif" font-size="40" font-weight="bold" text-anchor="middle" fill="#1a3a5f">+</text>
+  </g>
+  
+  <!-- Doctor icon -->
+  <g transform="translate(500, 700) scale(0.8)">
+    <circle cx="0" cy="0" r="40" fill="white" stroke="#1a3a5f" stroke-width="8"/>
+    <path d="M-30 40 L30 40 L30 80 L-30 80 Z" fill="white" stroke="#1a3a5f" stroke-width="8"/>
+    <path d="M0 -10 L0 10 M-10 0 L10 0" stroke="#1a3a5f" stroke-width="8"/>
+  </g>
+  
+  <!-- Checklist icon -->
+  <g transform="translate(700, 700) scale(0.8)">
+    <rect x="0" y="0" width="100" height="120" fill="white" stroke="#1a3a5f" stroke-width="8"/>
+    <circle cx="25" cy="30" r="10" fill="white" stroke="#1a3a5f" stroke-width="5"/>
+    <line x1="50" y1="30" x2="90" y2="30" stroke="#1a3a5f" stroke-width="5"/>
+    <circle cx="25" cy="60" r="10" fill="white" stroke="#1a3a5f" stroke-width="5"/>
+    <line x1="50" y1="60" x2="90" y2="60" stroke="#1a3a5f" stroke-width="5"/>
+    <circle cx="25" cy="90" r="10" fill="white" stroke="#1a3a5f" stroke-width="5"/>
+    <line x1="50" y1="90" x2="90" y2="90" stroke="#1a3a5f" stroke-width="5"/>
+  </g>
+</svg>

@@ -134,8 +134,11 @@ const Landingpage = () => {
       )}
 
       <div
-        className="container mt-4"
-        style={{ marginRight: isAuthenticated ? "260px" : "0" }}
+        className="container"
+        style={{ 
+          marginRight: isAuthenticated ? "260px" : "0",
+          marginTop: "80px" // Add padding to prevent navbar overlap
+        }}
       >
         <Routes>
           <Route
