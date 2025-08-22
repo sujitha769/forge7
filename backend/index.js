@@ -4,6 +4,7 @@ const express=require("express")
 const mongoose=require("mongoose");
 const cors=require('cors')
 const userroutes = require("./routes/userroutes");
+const prescriptionRoutes = require("./routes/prescriptionroutes");
 
 const app=express();
 const port=5700;
@@ -24,6 +25,7 @@ console.log("mongodb connected successfully")
 
 
 app.use("/user", userroutes);
+app.use("/prescriptions", prescriptionRoutes);
 app.listen(port,()=>{
   console.log(`server connected and running at port ${port}`)
 })

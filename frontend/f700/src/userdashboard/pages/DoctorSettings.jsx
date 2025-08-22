@@ -12,3 +12,5 @@ const DoctorSettings = () => {
 export default DoctorSettings;
 
 
+
+

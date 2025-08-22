@@ -133,6 +133,21 @@ const getProfileByUsername = async (req, res) => {
   }
 };
 
+// Fetch profile by exact userId (shown in client Profile as "User ID")
+const getProfileByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!userId || !userId.trim()) {
+      return res.status(400).json({ message: 'userId is required' });
+    }
+    const user = await usermodel.findOne({ userId: userId.trim() }).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 
 const searchUsers = async (req, res) => {
   try {
@@ -170,4 +185,4 @@ const updateUsername = async (req, res) => {
   }
 };
 
-module.exports={createuser,userLogin,getallusers,getuserbyid,getProfileByUsername,searchUsers, updateAvatar, upload, updateUsername}
+module.exports={createuser,userLogin,getallusers,getuserbyid,getProfileByUsername,getProfileByUserId,searchUsers, updateAvatar, upload, updateUsername}
