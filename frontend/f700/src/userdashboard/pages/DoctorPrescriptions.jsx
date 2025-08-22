@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const DoctorPrescriptions = () => {
   const [enteredId, setEnteredId] = useState('');
@@ -6,62 +6,69 @@ const DoctorPrescriptions = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [prescriptions, setPrescriptions] = useState([]);
-
-  // Add Prescription form state
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ prescription: '', formulation: 'Tablet', dosage: '', diseaseName: '', prescribedBy: '' });
+  const [form, setForm] = useState({ 
+    prescription: '', 
+    formulation: 'Tablet', 
+    dosage: '', 
+    diseaseName: '', 
+    prescribedBy: '' 
+  });
   const [saving, setSaving] = useState(false);
 
-  const fetchPrescriptions = async (userId) => {
-    const pr = await fetch(`http://localhost:5700/prescriptions/${encodeURIComponent(userId)}`);
-    if (pr.ok) {
-      const items = await pr.json();
-      // If backend includes status, prefer only active
-      const filtered = Array.isArray(items) ? items.filter(i => !i.status || i.status === 'active') : [];
-      setPrescriptions(filtered);
-    } else {
-      setPrescriptions([]);
-    }
-  };
+  // Test render
+  console.log('DoctorPrescriptions rendering...');
 
   const handleSearch = async () => {
-    const userId = (enteredId || '').trim();
-    if (!userId) {
+    if (!enteredId.trim()) {
       setError('Please enter a Client/User ID');
-      setClient(null);
-      setPrescriptions([]);
       return;
     }
+    
     try {
       setLoading(true);
       setError(null);
-      setClient(null);
-      setPrescriptions([]);
-      const res = await fetch(`http://localhost:5700/user/profile-by-id/${encodeURIComponent(userId)}`);
+      
+      const res = await fetch(`http://localhost:5700/user/profile-by-id/${encodeURIComponent(enteredId)}`);
+      
       if (res.status === 404) {
         setError('No data found for this Client/User ID');
+        setClient(null);
+        setPrescriptions([]);
         return;
       }
+      
       if (!res.ok) throw new Error('Failed to fetch client');
+      
       const data = await res.json();
-
-      // Enforce client-only: if role is not 'client', show message and abort
-      if ((data.role || '').toLowerCase() !== 'client') {
+      
+      if (data.role !== 'client') {
         setError('The entered ID belongs to a doctor. Please enter a Client/User ID.');
-        alert('This ID belongs to a doctor. Please enter a Client/User ID.');
+        setClient(null);
+        setPrescriptions([]);
         return;
       }
-
+      
       setClient(data);
-      await fetchPrescriptions(userId);
+      
+      // Fetch prescriptions
+      const pr = await fetch(`http://localhost:5700/prescriptions/${encodeURIComponent(enteredId)}`);
+      if (pr.ok) {
+        const items = await pr.json();
+        const filtered = Array.isArray(items) ? items.filter(i => !i.status || i.status === 'active') : [];
+        setPrescriptions(filtered);
+      } else {
+        setPrescriptions([]);
+      }
+      
     } catch (e) {
       setError(e.message);
+      setClient(null);
+      setPrescriptions([]);
     } finally {
       setLoading(false);
     }
   };
-
-  const calculateBillTotal = () => prescriptions.length * 25.5;
 
   const handleOpenForm = () => {
     if (!client) return;
@@ -70,11 +77,11 @@ const DoctorPrescriptions = () => {
   };
 
   const handleSavePrescription = async () => {
-    if (!client) return;
-    if (!form.prescription.trim() || !form.dosage.trim()) {
+    if (!client || !form.prescription.trim() || !form.dosage.trim()) {
       alert('Prescription name and dosage are required');
       return;
     }
+    
     try {
       setSaving(true);
       const res = await fetch('http://localhost:5700/prescriptions', {
@@ -89,9 +96,21 @@ const DoctorPrescriptions = () => {
           prescribedBy: form.prescribedBy.trim() || undefined,
         }),
       });
+      
       if (!res.ok) throw new Error('Failed to add prescription');
+      
       setShowForm(false);
-      await fetchPrescriptions(client.userId);
+      setForm({ prescription: '', formulation: 'Tablet', dosage: '', diseaseName: '', prescribedBy: '' });
+      
+      // Refresh prescriptions
+      const pr = await fetch(`http://localhost:5700/prescriptions/${encodeURIComponent(client.userId)}`);
+      if (pr.ok) {
+        const items = await pr.json();
+        const filtered = Array.isArray(items) ? items.filter(i => !i.status || i.status === 'active') : [];
+        setPrescriptions(filtered);
+      }
+      
+      alert('Prescription added successfully!');
     } catch (e) {
       alert(e.message);
     } finally {
@@ -108,6 +127,7 @@ const DoctorPrescriptions = () => {
         </div>
       </div>
 
+      {/* Client Search */}
       <div className="row mb-4">
         <div className="col-12">
           <div className="card border-0 shadow-sm">
@@ -155,6 +175,21 @@ const DoctorPrescriptions = () => {
         </div>
       </div>
 
+      {/* Client Found Success Message */}
+      {client && (
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="alert alert-success d-flex align-items-center" role="alert">
+              <i className="fas fa-check-circle me-2"></i>
+              <div>
+                <strong>Client Found!</strong> {client.name} ({client.userId}) - {prescriptions.length} active prescription(s)
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Client Information */}
       {client && (
         <div className="row mb-4">
           <div className="col-12">
@@ -188,16 +223,6 @@ const DoctorPrescriptions = () => {
                       <p className="mb-0">{client.address || '-'}</p>
                     </div>
                     <div className="mb-3">
-                      <label className="form-label fw-bold">Date of Birth:</label>
-                      <p className="mb-0">{client.dateOfBirth || '-'}</p>
-                    </div>
-                  </div>
-                  <div className="col-md-3">
-                    <div className="mb-3">
-                      <label className="form-label fw-bold">Emergency Contact:</label>
-                      <p className="mb-0">{client.emergencyContact || '-'}</p>
-                    </div>
-                    <div className="mb-3">
                       <label className="form-label fw-bold">Role:</label>
                       <p className="mb-0">{client.role || '-'}</p>
                     </div>
@@ -209,12 +234,13 @@ const DoctorPrescriptions = () => {
         </div>
       )}
 
+      {/* Active Prescriptions */}
       {client && (
         <div className="row">
           <div className="col-12">
             <div className="card border-0 shadow-sm">
               <div className="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-                <h5 className="mb-0">Prescriptions</h5>
+                <h5 className="mb-0">Active Prescriptions</h5>
                 <button className="btn btn-primary btn-sm" onClick={handleOpenForm}>
                   <i className="fas fa-plus me-2"></i>
                   Add Prescription
@@ -224,7 +250,11 @@ const DoctorPrescriptions = () => {
                 {prescriptions.length === 0 ? (
                   <div className="text-center py-5">
                     <i className="fas fa-pills fs-1 text-muted mb-3"></i>
-                    <p className="text-muted">No prescriptions found for this client</p>
+                    <p className="text-muted">No active prescriptions found for this client</p>
+                    <button className="btn btn-outline-primary" onClick={handleOpenForm}>
+                      <i className="fas fa-plus me-2"></i>
+                      Add First Prescription
+                    </button>
                   </div>
                 ) : (
                   <div className="table-responsive">
@@ -235,7 +265,7 @@ const DoctorPrescriptions = () => {
                           <th>Formulation</th>
                           <th>Dosage</th>
                           <th>Disease Name</th>
-                          <th>Prescribed by (Doc/Hospital)</th>
+                          <th>Prescribed by</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -256,10 +286,13 @@ const DoctorPrescriptions = () => {
                   <div className="card-footer bg-white border-0">
                     <div className="row">
                       <div className="col-md-6">
-                        <p className="mb-0"><strong>Total Items:</strong> {prescriptions.length}</p>
+                        <p className="mb-0"><strong>Total Active Prescriptions:</strong> {prescriptions.length}</p>
                       </div>
                       <div className="col-md-6 text-end">
-                        <p className="mb-0"><strong>Bill Total:</strong> ${calculateBillTotal().toFixed(2)}</p>
+                        <button className="btn btn-success btn-sm" onClick={handleOpenForm}>
+                          <i className="fas fa-plus me-2"></i>
+                          Add Another Prescription
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -270,40 +303,100 @@ const DoctorPrescriptions = () => {
         </div>
       )}
 
+      {/* Add Prescription Modal */}
       {showForm && (
-        <div className="modal d-block" tabIndex="-1" style={{ background: 'rgba(0,0,0,0.2)' }}>
-          <div className="modal-dialog">
+        <div className="modal d-block" tabIndex="-1" style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-lg">
             <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add Prescription</h5>
-                <button type="button" className="btn-close" onClick={() => setShowForm(false)}></button>
+              <div className="modal-header bg-primary text-white">
+                <h5 className="modal-title">
+                  <i className="fas fa-plus me-2"></i>
+                  Add New Prescription
+                </h5>
+                <button type="button" className="btn-close btn-close-white" onClick={() => setShowForm(false)}></button>
               </div>
               <div className="modal-body">
-                <div className="mb-3">
-                  <label className="form-label">Prescription</label>
-                  <input className="form-control" value={form.prescription} onChange={e => setForm({ ...form, prescription: e.target.value })} />
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label fw-bold">Prescription Name *</label>
+                      <input 
+                        className="form-control" 
+                        placeholder="e.g., Amoxicillin 500mg"
+                        value={form.prescription} 
+                        onChange={e => setForm({ ...form, prescription: e.target.value })} 
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label fw-bold">Formulation *</label>
+                      <select 
+                        className="form-select"
+                        value={form.formulation} 
+                        onChange={e => setForm({ ...form, formulation: e.target.value })}
+                      >
+                        <option value="Tablet">Tablet</option>
+                        <option value="Capsule">Capsule</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Injection">Injection</option>
+                        <option value="Cream">Cream</option>
+                        <option value="Drops">Drops</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label fw-bold">Dosage *</label>
+                      <input 
+                        className="form-control" 
+                        placeholder="e.g., 1 tablet twice daily"
+                        value={form.dosage} 
+                        onChange={e => setForm({ ...form, dosage: e.target.value })} 
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label fw-bold">Disease/Condition</label>
+                      <input 
+                        className="form-control" 
+                        placeholder="e.g., Bacterial infection"
+                        value={form.diseaseName} 
+                        onChange={e => setForm({ ...form, diseaseName: e.target.value })} 
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Formulation</label>
-                  <input className="form-control" value={form.formulation} onChange={e => setForm({ ...form, formulation: e.target.value })} />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Dosage</label>
-                  <input className="form-control" value={form.dosage} onChange={e => setForm({ ...form, dosage: e.target.value })} />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Disease Name</label>
-                  <input className="form-control" value={form.diseaseName} onChange={e => setForm({ ...form, diseaseName: e.target.value })} />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Prescribed by</label>
-                  <input className="form-control" value={form.prescribedBy} onChange={e => setForm({ ...form, prescribedBy: e.target.value })} />
+                  <label className="form-label fw-bold">Prescribed by (Doctor/Hospital)</label>
+                  <input 
+                    className="form-control" 
+                    placeholder="e.g., Dr. Smith, City Hospital"
+                    value={form.prescribedBy} 
+                    onChange={e => setForm({ ...form, prescribedBy: e.target.value })} 
+                  />
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Cancel</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>
+                  <i className="fas fa-times me-2"></i>Cancel
+                </button>
                 <button type="button" className="btn btn-primary" onClick={handleSavePrescription} disabled={saving}>
-                  {saving ? 'Saving...' : 'Save'}
+                  {saving ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-save me-2"></i>Save Prescription
+                    </>
+                  )}
                 </button>
               </div>
             </div>

@@ -95,8 +95,8 @@ import DoctorRegister from "./DoctorRegister";
 import MyBookings from "./MyBookings";
 import DoctorOverview from "./DoctorOverview";
 import DoctorAppointments from "./DoctorAppointments";
-import DoctorPatients from "./DoctorPatients";
 import DoctorPrescriptions from "./DoctorPrescriptions";
+import DoctorRefer from "./DoctorRefer";
 import DoctorSettings from "./DoctorSettings";
 import ChooseRole from "./ChooseRole";
 import RequireRole from "../components/RequireRole";
@@ -169,8 +169,8 @@ const Landingpage = () => {
                 <>
                   <Route path="/doctor/overview" element={<RequireRole role="doctor"><DoctorOverview /></RequireRole>} />
                   <Route path="/doctor/appointments" element={<RequireRole role="doctor"><DoctorAppointments /></RequireRole>} />
-                  <Route path="/doctor/patients" element={<RequireRole role="doctor"><DoctorPatients /></RequireRole>} />
                   <Route path="/doctor/prescriptions" element={<RequireRole role="doctor"><DoctorPrescriptions /></RequireRole>} />
+                  <Route path="/doctor/refer" element={<RequireRole role="doctor"><DoctorRefer /></RequireRole>} />
                   <Route path="/doctor/settings" element={<RequireRole role="doctor"><DoctorSettings /></RequireRole>} />
                 </>
               ) : (

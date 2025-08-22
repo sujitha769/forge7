@@ -11,9 +11,9 @@ const DoctorSidebar = () => {
 
       <Link to="/doctor/overview" className="nav-link text-dark mb-2">📊 Overview</Link>
       <Link to="/doctor/appointments" className="nav-link text-dark mb-2">📅 Appointments</Link>
-      <Link to="/doctor/patients" className="nav-link text-dark mb-2">👥 Patients</Link>
-      <Link to="/doctor/prescriptions" className="nav-link text-dark mb-2">💊 Prescriptions</Link>
-      <Link to="/doctor/settings" className="nav-link text-dark mb-2">⚙️ Settings</Link>
+      <Link to="/doctor-prescriptions" className="nav-link text-dark mb-2">💊 Prescriptions</Link>
+      <Link to="/refer" className="nav-link text-dark mb-2">👥 Refer</Link>
+      <Link to="/doctor-settings" className="nav-link text-dark mb-2">⚙️ Settings</Link>
     </div>
   );
 };
