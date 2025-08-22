@@ -1,0 +1,107 @@
+/* DoctorPrescriptions.css */
+
+/* Patient avatar styles */
+.avatar-circle {
+  width: 80px;
+  height: 80px;
+  background-color: #4e73df;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-text {
+  font-size: 32px;
+  color: white;
+  font-weight: bold;
+}
+
+/* Patient info card styles */
+.patient-info-card {
+  background-color: #f8f9fc;
+  border-radius: 8px;
+  padding: 12px 15px;
+  height: 100%;
+}
+
+.info-label {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-weight: 500;
+}
+
+/* Prescription styles */
+.prescription-card {
+  border-left: 4px solid #4e73df;
+  transition: all 0.2s ease;
+}
+
+.prescription-card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.prescription-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.prescription-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+.prescription-badge {
+  font-size: 0.8rem;
+}
+
+.prescription-detail {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.detail-label {
+  width: 100px;
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.detail-value {
+  font-weight: 500;
+}
+
+/* Add prescription button */
+.add-prescription-btn {
+  border: 2px dashed #4e73df;
+  background-color: rgba(78, 115, 223, 0.05);
+  color: #4e73df;
+  transition: all 0.2s ease;
+}
+
+.add-prescription-btn:hover {
+  background-color: rgba(78, 115, 223, 0.1);
+}
+
+/* Form styles */
+.prescription-form-container {
+  background-color: #f8f9fc;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #4e73df;
+  border-bottom: 1px solid #e3e6f0;
+  padding-bottom: 8px;
+}
