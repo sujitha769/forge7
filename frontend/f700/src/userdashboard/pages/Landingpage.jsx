@@ -100,6 +100,9 @@ import DoctorPrescriptions from "./DoctorPrescriptions";
 import DoctorSettings from "./DoctorSettings";
 import ChooseRole from "./ChooseRole";
 import RequireRole from "../components/RequireRole";
+import MyPrescriptions from "./MyPrescriptions";
+import MyReports from "./MyReports";
+import Settings from "./Settings";
 
 const Landingpage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -174,6 +177,9 @@ const Landingpage = () => {
                 <>
                   <Route path="/profile" element={<RequireRole role="client"><Profile /></RequireRole>} />
                   <Route path="/my-bookings" element={<RequireRole role="client"><MyBookings /></RequireRole>} />
+                  <Route path="/my-prescription" element={<RequireRole role="client"><MyPrescriptions /></RequireRole>} />
+                  <Route path="/my-reports" element={<RequireRole role="client"><MyReports /></RequireRole>} />
+                  <Route path="/settings" element={<RequireRole role="client"><Settings /></RequireRole>} />
                 </>
               )}
             </>

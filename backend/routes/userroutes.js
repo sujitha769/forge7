@@ -10,4 +10,11 @@ router.get('/profile/:username', usercontroller.getProfileByUsername)
 // New: fetch profile by exact userId
 router.get('/profile-by-id/:userId', usercontroller.getProfileByUserId)
 
+// Settings routes
+router.put('/update-profile/:username', usercontroller.updateProfile)
+router.put('/update-availability/:username', usercontroller.updateAvailability)
+router.put('/change-password/:username', usercontroller.changePassword)
+router.put('/update-notifications/:username', usercontroller.updateNotifications)
+router.put('/update-theme/:username', usercontroller.updateTheme)
+
 module.exports=router;

@@ -185,4 +185,142 @@ const updateUsername = async (req, res) => {
   }
 };
 
-module.exports={createuser,userLogin,getallusers,getuserbyid,getProfileByUsername,getProfileByUserId,searchUsers, updateAvatar, upload, updateUsername}
+const updateProfile = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const { name, email, specialization, experience, phone } = req.body;
+    
+    const user = await usermodel.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Update fields if provided
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (specialization !== undefined) user.specialization = specialization;
+    if (experience !== undefined) user.experience = experience;
+    if (phone !== undefined) user.phone = phone;
+    
+    await user.save();
+    
+    // Return updated user without password
+    const updatedUser = user.toObject();
+    delete updatedUser.password;
+    
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const updateAvailability = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const availabilityData = req.body;
+    
+    const user = await usermodel.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Update availability
+    user.availability = availabilityData;
+    await user.save();
+    
+    res.json({ message: 'Availability updated successfully' });
+  } catch (error) {
+    console.error('Error updating availability:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const { currentPassword, newPassword } = req.body;
+    
+    const user = await usermodel.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+    
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+    
+    await user.save();
+    
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const updateNotifications = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const notificationData = req.body;
+    
+    const user = await usermodel.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Update notification settings
+    user.notifications = notificationData;
+    await user.save();
+    
+    res.json({ message: 'Notification settings updated successfully' });
+  } catch (error) {
+    console.error('Error updating notifications:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const updateTheme = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const themeData = req.body;
+    
+    const user = await usermodel.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Update theme settings
+    user.theme = themeData;
+    await user.save();
+    
+    res.json({ message: 'Theme settings updated successfully' });
+  } catch (error) {
+    console.error('Error updating theme:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = {
+  createuser,
+  userLogin,
+  getallusers,
+  getuserbyid,
+  getProfileByUsername,
+  getProfileByUserId,
+  searchUsers,
+  updateAvatar,
+  upload,
+  updateUsername,
+  updateProfile,
+  updateAvailability,
+  changePassword,
+  updateNotifications,
+  updateTheme
+};
