@@ -42,12 +42,9 @@ const Login = () => {
         // Enforce role match: selected role must equal registered role
         const registeredRole = (data.role || '').toLowerCase();
         const selectedRole = (formData.role || '').toLowerCase();
+        // If registeredRole and selectedRole do not match, auto-correct and proceed to login
         if (registeredRole && selectedRole && registeredRole !== selectedRole) {
-          // Show popup and stop login
-          alert(`You're registered as ${registeredRole}. Please select "${registeredRole}" to log in.`);
-          // Optionally auto-correct the selection to the registered role
           setFormData(prev => ({ ...prev, role: registeredRole }));
-          return;
         }
 
         localStorage.setItem('logintoken', data.token);
@@ -58,8 +55,10 @@ const Login = () => {
         const finalRole = registeredRole || selectedRole;
         if (finalRole === 'doctor') {
           navigate('/doctor-overview');
+          window.location.reload();
         } else {
           navigate('/profile');
+          window.location.reload();
         }
       } else {
         setError(data.message || 'Login failed');
